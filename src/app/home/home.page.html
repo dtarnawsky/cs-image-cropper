@@ -1,20 +1,60 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Blank
+      Cropper
     </ion-title>
   </ion-toolbar>
 </ion-header>
-
-<ion-content [fullscreen]="true">
+<ion-content  [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
+      <ion-title size="large">Cropper</ion-title>
     </ion-toolbar>
   </ion-header>
+  <ion-input type="file" (change)="fileChangeEvent($event)"></ion-input>
+  <br />
+  <br />
+  <input [(ngModel)]="imageURL" placeholder="URL to load image" type="text" />
+  <br />
+  <br />
+  <ion-button (click)="rotateLeft()">Rotate left</ion-button>
+  <ion-button (click)="rotateRight()">Rotate right</ion-button>
+  <ion-button (click)="flipHorizontal()">Flip horizontal</ion-button>
+  <ion-button (click)="flipVertical()">Flip vertical</ion-button>
+  <br />
+  <br />
+  <ion-button (click)="toggleContainWithinAspectRatio()">{{containWithinAspectRatio?'Fill Aspect Ratio':'Contain Within
+    Aspect
+    Ratio'}}</ion-button>
+  <ion-button (click)="toggleAspectRatio()">Aspect ratio: {{aspectRatio === 4/3 ? '4/3' : '16/5'}}</ion-button>
+  <ion-button (click)="resetImage()">Reset image</ion-button>
+  <br />
+  <br />
+  <input [(ngModel)]="rotation" placeholder="Rotation" type="number" (ngModelChange)="updateRotation()" /> <ion-button
+    (click)="zoomOut()">Zoom -</ion-button> <ion-button (click)="zoomIn()">Zoom +</ion-button>
+  <br />
+  <br />
+  <ion-button (click)="moveLeft()">move left</ion-button>
+  <ion-button (click)="moveRight()">move right</ion-button>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+  <ion-button (click)="moveTop()">move top</ion-button>
+  <ion-button (click)="moveBottom()">move bottom</ion-button>
+  <br />
+  <br />
+  <ion-button (click)="allowMoveImage = !allowMoveImage;">{{allowMoveImage ? 'Disable' : 'Enable' }} image panning</ion-button>
+  <ion-button (click)="hidden = !hidden;">{{hidden ? 'Show' : 'Hide' }}</ion-button>
+  <br />
+
+
+  <div class="cropper-wrapper">
+    <image-cropper [imageBase64]="imageBase64" [imageChangedEvent]="imageChangedEvent" [imageURL]="imageURL" [maintainAspectRatio]="true"
+      [containWithinAspectRatio]="containWithinAspectRatio" [aspectRatio]="aspectRatio" [resizeToWidth]="128"
+      [cropperMinWidth]="128" [onlyScaleDown]="true" [roundCropper]="false" [canvasRotation]="canvasRotation"
+      [(transform)]="transform" [alignImage]="'center'" [style.display]="showCropper ? null : 'none'"
+      [allowMoveImage]="allowMoveImage" [hidden]="hidden" backgroundColor="red" format="png"
+      (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()" (cropperReady)="cropperReady($event)"
+      (loadImageFailed)="loadImageFailed()"></image-cropper>
+    <div *ngIf="loading" class="loader">Loading...</div>
   </div>
+  <img [src]="croppedImage" [style.border]="croppedImage ? '1px solid black' : 'none'" />
 </ion-content>
